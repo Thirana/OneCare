@@ -1,0 +1,2 @@
+### GET request to get a doctors based on specialization
+GET http://localhost:4000/doctors/specialization/Dermatology

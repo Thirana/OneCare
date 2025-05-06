@@ -1,8 +1,11 @@
 package com.pm.doctorservice.controller;
 
 
+import com.pm.doctorservice.dto.AvailabilityRequestDto;
+import com.pm.doctorservice.dto.AvailabilityResponseDto;
 import com.pm.doctorservice.dto.DoctorRequestDTO;
 import com.pm.doctorservice.dto.DoctorResponseDTO;
+import com.pm.doctorservice.model.Availability;
 import com.pm.doctorservice.service.DoctorService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -51,6 +54,34 @@ public class DoctorController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDoctor(@PathVariable UUID id) {
         doctorService.deleteDoctor(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/specialization/{spec}")
+    public ResponseEntity<List<DoctorResponseDTO>> getDoctorsBySpecialization(@PathVariable String spec) {
+        return ResponseEntity.ok(doctorService.getDoctorsBySpecialization(spec));
+    }
+
+    @GetMapping("/{id}/availability")
+    public ResponseEntity<List<AvailabilityResponseDto>> getAvailability(@PathVariable UUID id) {
+        return ResponseEntity.ok(doctorService.getDoctorAvailability(id));
+    }
+
+    @PostMapping("/{id}/availability")
+    public ResponseEntity<AvailabilityResponseDto> addAvailability(
+            @PathVariable UUID id,
+            @RequestBody AvailabilityRequestDto requestDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                doctorService.addAvailability(id, requestDto)
+        );
+    }
+
+
+    @DeleteMapping("/{doctorId}/availabilities/{availabilityId}")
+    public ResponseEntity<Void> deleteAvailability(
+            @PathVariable UUID doctorId,
+            @PathVariable UUID availabilityId) {
+        doctorService.deleteAvailability(doctorId, availabilityId);
         return ResponseEntity.noContent().build();
     }
 

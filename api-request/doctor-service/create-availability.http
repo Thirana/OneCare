@@ -1,0 +1,10 @@
+### POST request to add a doctors availability
+POST http://localhost:4000/doctors/22222222-2222-2222-2222-222222222222/availability
+Content-Type: application/json
+
+{
+  "date": "2025-07-11",
+  "startTime": "10:00:00",
+  "endTime": "13:00:00",
+  "booked": false
+}

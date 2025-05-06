@@ -1,8 +1,12 @@
 package com.pm.doctorservice.service;
 
+import com.pm.doctorservice.dto.AvailabilityRequestDto;
+import com.pm.doctorservice.dto.AvailabilityResponseDto;
 import com.pm.doctorservice.dto.DoctorRequestDTO;
 import com.pm.doctorservice.dto.DoctorResponseDTO;
+import com.pm.doctorservice.mapper.AvailabilityMapper;
 import com.pm.doctorservice.mapper.DoctorMapper;
+import com.pm.doctorservice.model.Availability;
 import com.pm.doctorservice.model.Doctor;
 import com.pm.doctorservice.repository.AvailabilityRepository;
 import com.pm.doctorservice.repository.DoctorRepository;
@@ -61,6 +65,48 @@ public class DoctorServiceImpl implements DoctorService {
             throw new EntityNotFoundException("Doctor not found");
         }
         doctorRepository.deleteById(id);
+    }
+
+    @Override
+    public List<DoctorResponseDTO> getDoctorsBySpecialization(String specialization) {
+        return doctorRepository.findBySpecialization(specialization).stream()
+                .map(DoctorMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AvailabilityResponseDto> getDoctorAvailability(UUID doctorId) {
+        if (!doctorRepository.existsById(doctorId)) {
+            throw new EntityNotFoundException("Doctor not found");
+        }
+        return availabilityRepository.findByDoctorId(doctorId)
+                .stream()
+                .map(AvailabilityMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public AvailabilityResponseDto addAvailability(UUID doctorId, AvailabilityRequestDto dto) {
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new EntityNotFoundException("Doctor not found"));
+
+        Availability availability = AvailabilityMapper.toEntity(dto);
+        availability.setDoctor(doctor); // important
+
+        Availability saved = availabilityRepository.save(availability);
+        return AvailabilityMapper.toDto(saved);
+    }
+
+    @Override
+    public void deleteAvailability(UUID doctorId, UUID availabilityId) {
+        Availability availability = availabilityRepository.findById(availabilityId)
+                .orElseThrow(() -> new EntityNotFoundException("Availability not found"));
+
+        if (!availability.getDoctor().getId().equals(doctorId)) {
+            throw new IllegalArgumentException("Availability does not belong to this doctor");
+        }
+
+        availabilityRepository.delete(availability);
     }
 
 }

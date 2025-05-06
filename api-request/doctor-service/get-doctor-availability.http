@@ -1,0 +1,2 @@
+### GET request to get a doctors availability
+GET http://localhost:4000/doctors/22222222-2222-2222-2222-222222222222/availability

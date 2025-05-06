@@ -1,0 +1,4 @@
+### Delete an availability
+DELETE http://localhost:4000/doctors/22222222-2222-2222-2222-222222222222/availabilities/1b74cf52-0d1f-4244-9625-0aaecbe824d7
+
+###
