@@ -1,0 +1,13 @@
+### Create a new doctor entity
+POST http://localhost:4000/doctors
+Content-Type: application/json
+
+{
+  "name": "Thirana Embuldeniya",
+  "specialization": "Programming",
+  "email": "t.embuldeniya@gmail.com",
+  "phone": "0714594040",
+  "address": "test-address"
+}
+
+###
