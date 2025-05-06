@@ -1,0 +1,11 @@
+### Update a new doctor entity
+PUT http://localhost:4000/doctors/0bdf8180-bc17-496d-b0d7-96927c35ed22
+Content-Type: application/json
+
+{
+  "name": "Thirana Embuldeniya updated",
+  "specialization": "Programming",
+  "email": "t.embuldeniya@gmail.com",
+  "phone": "0714594040",
+  "address": "test-address updated"
+}

@@ -1,0 +1,3 @@
+### Delete an doctor
+DELETE http://localhost:4000/doctors/33333333-3333-3333-3333-333333333333
+###

@@ -1,0 +1,2 @@
+### GET request to get all doctors
+GET http://localhost:4000/doctors
