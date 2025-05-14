@@ -1,0 +1,2 @@
+### DELETE request to remove an appointment
+DELETE http://localhost:5000/appointments/cccccccc-3333-4444-5555-666666666666

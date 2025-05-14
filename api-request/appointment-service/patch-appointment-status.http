@@ -1,0 +1,2 @@
+### PATCH request to update only a status of an appointment
+PATCH http://localhost:5000/appointments/dddddddd-4444-5555-6666-777777777777/status/COMPLETED
