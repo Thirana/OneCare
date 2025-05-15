@@ -10,11 +10,8 @@ public class AppointmentMapper {
         Appointment appointment = new Appointment();
         appointment.setPatientId(dto.patientId);
         appointment.setDoctorId(dto.doctorId);
-        appointment.setDate(dto.date);
-        appointment.setStartTime(dto.startTime);
-        appointment.setEndTime(dto.endTime);
+        appointment.setAvailabilityId(dto.availabilityId);
         appointment.setNotes(dto.notes);
-        appointment.setStatus(dto.status);
         return appointment;
     }
 
@@ -23,21 +20,15 @@ public class AppointmentMapper {
         dto.id = appointment.getId();
         dto.patientId = appointment.getPatientId();
         dto.doctorId = appointment.getDoctorId();
-        dto.date = appointment.getDate();
-        dto.startTime = appointment.getStartTime();
-        dto.endTime = appointment.getEndTime();
+        dto.availabilityId = appointment.getAvailabilityId();
         dto.notes = appointment.getNotes();
-        dto.status = appointment.getStatus();
         return dto;
     }
 
     public static void updateEntity(Appointment appointment, AppointmentRequestDTO dto) {
         appointment.setPatientId(dto.patientId);
         appointment.setDoctorId(dto.doctorId);
-        appointment.setDate(dto.date);
-        appointment.setStartTime(dto.startTime);
-        appointment.setEndTime(dto.endTime);
+        appointment.setAvailabilityId(dto.availabilityId);
         appointment.setNotes(dto.notes);
-        appointment.setStatus(dto.status);
     }
 }

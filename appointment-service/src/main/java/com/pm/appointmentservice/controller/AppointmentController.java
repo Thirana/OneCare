@@ -2,15 +2,12 @@ package com.pm.appointmentservice.controller;
 
 import com.pm.appointmentservice.dto.AppointmentRequestDTO;
 import com.pm.appointmentservice.dto.AppointmentResponseDTO;
-import com.pm.appointmentservice.model.AppointmentStatus;
 import com.pm.appointmentservice.service.AppointmentService;
 import jakarta.validation.Valid;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,13 +38,6 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getAllAppointments(page, size));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AppointmentResponseDTO> updateAppointment(
-            @PathVariable UUID id,
-            @Valid @RequestBody AppointmentRequestDTO requestDTO) {
-        return ResponseEntity.ok(appointmentService.updateAppointment(id, requestDTO));
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAppointment(@PathVariable UUID id) {
         appointmentService.deleteAppointment(id);
@@ -59,21 +49,4 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getAppointmentsByPatient(patientId));
     }
 
-    @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<List<AppointmentResponseDTO>> getAppointmentsByDoctor(@PathVariable UUID doctorId) {
-        return ResponseEntity.ok(appointmentService.getAppointmentsByDoctor(doctorId));
-    }
-
-    @GetMapping("/date/{date}")
-    public ResponseEntity<List<AppointmentResponseDTO>> getAppointmentsByDate(
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return ResponseEntity.ok(appointmentService.getAppointmentsByDate(date));
-    }
-
-    @PatchMapping("/{id}/status/{status}")
-    public ResponseEntity<AppointmentResponseDTO> updateAppointmentStatus(
-            @PathVariable UUID id,
-            @PathVariable AppointmentStatus status) {
-        return ResponseEntity.ok(appointmentService.updateAppointmentStatus(id, status));
-    }
 }

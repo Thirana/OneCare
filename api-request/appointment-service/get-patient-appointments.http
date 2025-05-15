@@ -1,2 +1,2 @@
 ### GET request to retrieve all appointments for a specific patient
-GET http://localhost:5000/appointments/patient/99999999-9999-9999-9999-999999999999
+GET http://localhost:5000/appointments/patient/223e4567-e89b-12d3-a456-426614174005

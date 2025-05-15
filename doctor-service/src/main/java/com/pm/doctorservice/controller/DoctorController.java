@@ -76,6 +76,13 @@ public class DoctorController {
         );
     }
 
+    @PutMapping("/{doctorId}/availabilities/{availabilityId}")
+    public ResponseEntity<AvailabilityResponseDto> updateAvailability(
+            @PathVariable UUID doctorId,
+            @PathVariable UUID availabilityId,
+            @Valid @RequestBody AvailabilityRequestDto requestDto) {
+        return ResponseEntity.ok(doctorService.updateAvailability(doctorId, availabilityId, requestDto));
+    }
 
     @DeleteMapping("/{doctorId}/availabilities/{availabilityId}")
     public ResponseEntity<Void> deleteAvailability(

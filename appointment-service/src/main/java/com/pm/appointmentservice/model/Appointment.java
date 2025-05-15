@@ -3,8 +3,6 @@ package com.pm.appointmentservice.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
@@ -20,18 +18,9 @@ public class Appointment {
     private UUID doctorId;
 
     @NotNull
-    private LocalDate date;
-
-    @NotNull
-    private LocalTime startTime;
-
-    @NotNull
-    private LocalTime endTime;
+    private UUID availabilityId;
 
     private String notes;
-
-    @Enumerated(EnumType.STRING)
-    private AppointmentStatus status = AppointmentStatus.SCHEDULED;
 
     // Getters and Setters
     public UUID getId() {
@@ -58,28 +47,12 @@ public class Appointment {
         this.doctorId = doctorId;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public UUID getAvailabilityId() {
+        return availabilityId;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
+    public void setAvailabilityId(UUID availabilityId) {
+        this.availabilityId = availabilityId;
     }
 
     public String getNotes() {
@@ -88,13 +61,5 @@ public class Appointment {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public AppointmentStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(AppointmentStatus status) {
-        this.status = status;
     }
 }

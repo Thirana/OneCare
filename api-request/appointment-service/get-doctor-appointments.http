@@ -1,2 +1,0 @@
-### GET request to retrieve all appointments for a specific doctor
-GET http://localhost:5000/appointments/doctor/11111111-1111-1111-1111-111111111111
