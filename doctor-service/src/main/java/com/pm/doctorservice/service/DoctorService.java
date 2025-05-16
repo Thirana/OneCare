@@ -26,6 +26,8 @@ public interface DoctorService {
 
     AvailabilityResponseDto addAvailability(UUID doctorId, AvailabilityRequestDto dto);
 
+    AvailabilityResponseDto updateAvailability(UUID doctorId, UUID availabilityId, AvailabilityRequestDto dto);
+
     void deleteAvailability(UUID doctorId, UUID availabilityId);
 
 }

@@ -98,6 +98,25 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    public AvailabilityResponseDto updateAvailability(UUID doctorId, UUID availabilityId, AvailabilityRequestDto dto) {
+        Availability availability = availabilityRepository.findById(availabilityId)
+                .orElseThrow(() -> new EntityNotFoundException("Availability not found"));
+
+        if (!availability.getDoctor().getId().equals(doctorId)) {
+            throw new IllegalArgumentException("Availability does not belong to this doctor");
+        }
+
+        // Update the availability fields
+        availability.setDate(dto.date);
+        availability.setStartTime(dto.startTime);
+        availability.setEndTime(dto.endTime);
+        availability.setBooked(dto.booked);
+
+        Availability updated = availabilityRepository.save(availability);
+        return AvailabilityMapper.toDto(updated);
+    }
+
+    @Override
     public void deleteAvailability(UUID doctorId, UUID availabilityId) {
         Availability availability = availabilityRepository.findById(availabilityId)
                 .orElseThrow(() -> new EntityNotFoundException("Availability not found"));

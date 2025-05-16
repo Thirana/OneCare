@@ -1,0 +1,2 @@
+### GET request to retrieve a specific appointment
+GET http://localhost:5000/appointments/cccccccc-3333-4444-5555-666666666666
