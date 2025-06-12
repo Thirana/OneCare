@@ -155,3 +155,10 @@ SELECT '223e4567-e89b-12d3-a456-426614174014',
        '1987-10-17',
        '2024-03-29'
     WHERE NOT EXISTS (SELECT 1 FROM patient WHERE id = '223e4567-e89b-12d3-a456-426614174014');
+
+-- Insert sample patients
+INSERT INTO patient (id, name, email, address, date_of_birth, registered_date)
+VALUES
+    ('11111111-1111-1111-1111-111111111111', 'John Doe', 'john.doe2@example.com', '123 Main St', '1990-01-01', '2024-01-01'),
+    ('22222222-2222-2222-2222-222222222222', 'Jane Smith', 'jane.smith2@example.com', '456 Oak Ave', '1985-05-15', '2024-01-02'),
+    ('33333333-3333-3333-3333-333333333333', 'Bob Wilson', 'bob.wilson2@example.com', '789 Pine Rd', '1978-12-25', '2024-01-03');

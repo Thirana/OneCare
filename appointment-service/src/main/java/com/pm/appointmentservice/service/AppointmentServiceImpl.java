@@ -2,16 +2,20 @@ package com.pm.appointmentservice.service;
 
 import com.pm.appointmentservice.dto.AppointmentRequestDTO;
 import com.pm.appointmentservice.dto.AppointmentResponseDTO;
+import com.pm.appointmentservice.exception.ServiceCommunicationException;
 import com.pm.appointmentservice.mapper.AppointmentMapper;
 import com.pm.appointmentservice.model.Appointment;
 import com.pm.appointmentservice.repository.AppointmentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
+    private static final Logger logger = LoggerFactory.getLogger(AppointmentServiceImpl.class);
     private final AppointmentRepository appointmentRepository;
     private final WebClient.Builder webClientBuilder;
 
@@ -94,8 +99,25 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (patientId == null) {
             throw new IllegalArgumentException("Patient ID cannot be null");
         }
-        
-        // TODO: Add actual patient service verification when it's implemented
+
+        try {
+            webClientBuilder.build()
+                    .get()
+                    .uri("http://patient-service/patients/{id}", patientId)
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .blockOptional()
+                    .orElseThrow(() -> new EntityNotFoundException("Patient not found with ID: " + patientId));
+        } catch (WebClientResponseException.NotFound e) {
+            logger.debug("Patient not found with ID: {}", patientId);
+            throw new EntityNotFoundException("Patient not found with ID: " + patientId);
+        } catch (WebClientResponseException e) {
+            logger.error("Patient service returned error: {} - {}", e.getStatusCode(), e.getMessage());
+            throw new ServiceCommunicationException("Patient service returned error: " + e.getStatusCode() + " - " + e.getMessage());
+        } catch (Exception e) {
+            logger.error("Failed to communicate with patient service", e);
+            throw new ServiceCommunicationException("Cannot reach patient service. Please ensure the service is running.");
+        }
     }
 
     private void verifyAvailabilityNotBooked(UUID doctorId, UUID availabilityId) {
@@ -103,25 +125,35 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new IllegalArgumentException("Doctor ID and Availability ID cannot be null");
         }
 
-        List<Map<String, Object>> availabilities = webClientBuilder.build()
-                .get()
-                .uri("http://doctor-service/doctors/{doctorId}/availability", doctorId)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
-                .block();
+        try {
+            List<Map<String, Object>> availabilities = webClientBuilder.build()
+                    .get()
+                    .uri("http://doctor-service/doctors/{doctorId}/availability", doctorId)
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
+                    .block();
 
-        if (availabilities == null || availabilities.isEmpty()) {
-            throw new EntityNotFoundException("No availabilities found for doctor");
-        }
+            if (availabilities == null || availabilities.isEmpty()) {
+                throw new EntityNotFoundException("No availabilities found for doctor");
+            }
 
-        Map<String, Object> availability = availabilities.stream()
-                .filter(a -> availabilityId.equals(UUID.fromString((String) a.get("id"))))
-                .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Availability slot not found"));
+            Map<String, Object> availability = availabilities.stream()
+                    .filter(a -> availabilityId.equals(UUID.fromString((String) a.get("id"))))
+                    .findFirst()
+                    .orElseThrow(() -> new EntityNotFoundException("Availability slot not found"));
 
-        Boolean isBooked = (Boolean) availability.get("booked");
-        if (isBooked != null && isBooked) {
-            throw new IllegalStateException("This availability slot is already booked");
+            Boolean isBooked = (Boolean) availability.get("booked");
+            if (isBooked != null && isBooked) {
+                throw new IllegalStateException("This availability slot is already booked");
+            }
+        } catch (WebClientResponseException.NotFound e) {
+            throw new EntityNotFoundException("Doctor not found with ID: " + doctorId);
+        } catch (IllegalStateException e) {
+            throw e; // Re-throw booking state exceptions
+        } catch (EntityNotFoundException e) {
+            throw e; // Re-throw not found exceptions
+        } catch (Exception e) {
+            throw new ServiceCommunicationException("Error communicating with doctor service: " + e.getMessage());
         }
     }
 

@@ -3,7 +3,7 @@ POST http://localhost:5000/appointments
 Content-Type: application/json
 
 {
-    "patientId": "223e4567-e89b-12d3-a456-426614174005",
+    "patientId": "22222222-2222-2222-2222-22222222222",
     "doctorId": "22222222-2222-2222-2222-222222222222",
     "availabilityId": "bbbb1111-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
     "notes": "Regular checkup"

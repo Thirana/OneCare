@@ -28,6 +28,13 @@ public class PatientService {
         return patients.stream().map(PatientMapper::toDTO).toList();
     }
 
+    // service for getting patient by ID
+    public PatientResponseDTO getPatientById(UUID id) {
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new PatientNotFoundException("Patient not found with ID: " + id));
+        return PatientMapper.toDTO(patient);
+    }
+
     //service for create new patient
     public PatientResponseDTO createPatient(PatientRequestDTO patientRequestDTO) {
 
