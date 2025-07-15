@@ -4,7 +4,7 @@ A microservices-based healthcare system for managing patients, doctors, and appo
 
 ## System Architecture
 
-The system consists of four main microservices:
+The system consists of three microservices + Discovery server + API gateway:
 
 1. **Discovery Server** (Port: 8761)
    - Service registry and discovery using Netflix Eureka
@@ -22,9 +22,12 @@ The system consists of four main microservices:
    - Manages appointment bookings
    - Coordinates between patient and doctor services
 
+5. **API-gateway** (Port: 8080)
+   - Single entry point to all the services
+
 ## Complete Appointment Booking Workflow
 
-Here's a step-by-step guide on how to book an appointment, with example API calls:
+Step-by-step guide on how to book an appointment, with example API calls:
 
 ### 1. View Available Doctors
 
@@ -151,8 +154,7 @@ This will:
 When booking an appointment, the following interactions occur:
 
 1. **Appointment Service → Patient Service**
-   - Verifies patient exists (to be implemented)
-   - Checks patient eligibility (future enhancement)
+   - Verifies patient exists
 
 2. **Appointment Service → Doctor Service**
    - Verifies doctor exists
@@ -185,6 +187,39 @@ cd appointment-service
 ./mvnw spring-boot:run
 ```
 
+5. Start the Appointment Service:
+```bash
+cd api-gateway
+./mvnw spring-boot:run
+```
+
+## Setup and Running the System using Docker
+
+```bash
+# Create network first
+docker network create microservices-network
+
+# Run discovery server first
+cd discovery-server
+docker-compose up --build -d
+
+# Run API gateway
+cd ../api-gateway
+docker-compose up --build -d
+
+# Run patient service
+cd ../patient-service
+docker-compose up --build -d
+
+# Run doctor service
+cd ../doctor-service
+docker-compose up --build -d
+
+# Run appointment service
+cd ../appointment-service
+docker-compose up --build -d
+```
+
 ## Development Environment
 
 - Java 21
@@ -197,9 +232,6 @@ cd appointment-service
 ## API Documentation
 
 Detailed API documentation for each service can be found in their respective README files:
-- [Appointment Service Documentation](appointment-service/README.md)
-- [Doctor Service Documentation](doctor-service/README.md)
-- [Patient Service Documentation](patient-service/README.md)
 
 ## Error Handling
 

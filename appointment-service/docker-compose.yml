@@ -1,52 +1,52 @@
 version: "3.8"
 
 services:
-  patient-postgres:
+  appointment-postgres:
     image: postgres:16
-    container_name: patient-postgres
+    container_name: appointment-postgres
     environment:
-      POSTGRES_DB: patientdb
+      POSTGRES_DB: appointmentdb
       POSTGRES_USER: admin_viewer
       POSTGRES_PASSWORD: password
     volumes:
-      - ./patient_postgres_data:/var/lib/postgresql/data
+      - ./appointment_postgres_data:/var/lib/postgresql/data
     ports:
-      - "5434:5432"
+      - "5433:5432"
     networks:
-      - patient-network
+      - appointment-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin_viewer -d patientdb"]
+      test: ["CMD-SHELL", "pg_isready -U admin_viewer -d appointmentdb"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  patient-service:
+  appointment-service:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: patient-service
+    container_name: appointment-service
     depends_on:
-      patient-postgres:
+      appointment-postgres:
         condition: service_healthy
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://patient-postgres:5432/patientdb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://appointment-postgres:5432/appointmentdb
       - SPRING_DATASOURCE_USERNAME=admin_viewer
       - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8761/eureka/
     ports:
-      - "3000:3000"
+      - "5000:5000"
     networks:
-      - patient-network
+      - appointment-network
       - microservices-network
     restart: unless-stopped
 
 volumes:
-  patient_postgres_data:
+  appointment_postgres_data:
 
 networks:
-  patient-network:
+  appointment-network:
     driver: bridge
   microservices-network:
     external: true

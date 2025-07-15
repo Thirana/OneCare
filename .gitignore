@@ -84,3 +84,6 @@ Thumbs.db
 
 # AWS credentials
 .aws/
+
+# PostgreSQL
+*_postgres_data/
