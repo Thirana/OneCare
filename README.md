@@ -35,10 +35,10 @@ First, get a list of all doctors or filter by specialization:
 
 ```http
 # Get all doctors
-GET http://localhost:4000/doctors
+GET http://localhost:8080/doctors
 
 # Get doctors by specialization
-GET http://localhost:4000/doctors/specialization/Cardiology
+GET http://localhost:8080/doctors/specialization/Cardiology
 ```
 
 Example Response:
@@ -66,7 +66,7 @@ Example Response:
 Once you've chosen a doctor, get their availability slots:
 
 ```http
-GET http://localhost:4000/doctors/11111111-1111-1111-1111-111111111111/availability
+GET http://localhost:8080/doctors/11111111-1111-1111-1111-111111111111/availability
 ```
 
 Example Response:
@@ -94,7 +94,7 @@ Example Response:
 Using your patient ID, the chosen doctor's ID, and the selected availability slot ID, create an appointment:
 
 ```http
-POST http://localhost:5000/appointments
+POST http://localhost:8080/appointments
 Content-Type: application/json
 
 {
@@ -121,7 +121,7 @@ Example Response:
 Check your booked appointments:
 
 ```http
-GET http://localhost:5000/appointments/patient/99999999-9999-9999-9999-999999999999
+GET http://localhost:8080/appointments/patient/99999999-9999-9999-9999-999999999999
 ```
 
 Example Response:
@@ -142,7 +142,7 @@ Example Response:
 If needed, you can cancel your appointment:
 
 ```http
-DELETE http://localhost:5000/appointments/bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
+DELETE http://localhost:8080/appointments/bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
 ```
 
 This will:
